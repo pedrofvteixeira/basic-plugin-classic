@@ -16,6 +16,16 @@
 
 	<content-types>
 
+		<!-- ================================ -->
+		<!-- Static resources 				  -->
+		<!-- ================================ -->
+
+        <static-paths>
+        	<!-- this translates to /api/repos/basic-plugin/<LOCAL_FOLDER>/<RESOURCE_FILENAME> -->
+            <static-path url="/basic-plugin/resources" localFolder="resources"/>
+            <static-path url="/basic-plugin/lang" localFolder="lang"/>
+        </static-paths>
+
 		<!-- for now we'll use a file extension that we know the platform is aware of, but later on we'll create our own -->
 		<!-- see pentaho-solutions/system/ImportHandlerMimeTypeDefinitions.xml for list of recognized mimeTypes + file extensions -->
 

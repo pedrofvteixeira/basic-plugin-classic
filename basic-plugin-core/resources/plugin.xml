@@ -54,4 +54,15 @@
 
     </content-types>
 
+	<!-- ================================ -->
+	<!-- External resources 			  -->
+	<!-- ================================ -->
+
+    <external-resources>
+
+    	<!-- a couple of contexts: global, mantle, requirejs, analyzer, ...  -->
+    	<!-- we'll leverage on our already registered static resource endpoints -->
+    	<file context="mantle">api/repos/basic-plugin/resources/basic-plugin-startup.js</file>
+  	</external-resources>
+
 </plugin>

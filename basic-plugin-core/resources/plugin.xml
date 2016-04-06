@@ -2,6 +2,12 @@
 
 <!-- 'plugin name' equals 'unequivocal plugin id' -->
 <plugin name="basic-plugin" title="Pentaho Basic Plugin">
+
+	<!-- ================================ -->
+	<!-- Lifecycle Listener 			  -->
+	<!-- ================================ -->
+
+	<lifecycle-listener class="pt.webdetails.basic.plugin.BasicPluginLifecycleListener" />
 	
 	
 

@@ -22,6 +22,8 @@
     <dependency org="${pentaho.group}" name="basic-plugin-api" rev="${project.revision}" transitive="false" changing="true" conf='runtime,default'/>
 
     <dependency org="${pentaho.group}" name="pentaho-platform-api" rev="${dependency.pentaho.revision}" transitive="false"  changing="true" />
+
+    <dependency org="commons-logging" name="commons-logging" rev="${dependency.commons.logging.revision}" transitive="false" />
     
   </dependencies>
 

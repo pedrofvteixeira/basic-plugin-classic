@@ -1,0 +1,128 @@
+<!--===========================================================================
+  This is the build file for the Community Text Editor Plugin project.
+
+  This build file will use the common build files as the default build process
+  and should only override the tasks that need to differ from them.
+
+  See subfloor-pkg.xml and subfloor.xml for more details
+============================================================================-->
+<project name="Pentaho Basic Plugin API" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <description>This build file is used to create the Pentaho Basic Plugin API project and works with the common_build.xml file</description>
+
+  <property file="../build.properties"
+            description="Top level Properties customized for your particular project belong in this file." />
+
+  <!-- Import the common build file which contains all the default tasks -->
+  <import file="../build-res/subfloor.xml" id="subfloor"/>
+
+  <!--
+    AS STATED ABOVE, THE ONLY TASKS THAT SHOULD EXIST IN THIS BUILD FILE ARE
+    THE TASKS THAT NEED TO DIFFER FROM THE DEFAULT IMPLEMENTATION OF THE TASKS
+    FOUND IN THE COMMON BUILD FILES.
+  -->
+
+  <property name="plugin.name"
+            value="${ivy.artifact.id}"
+            description="Name of the plugin"/>
+
+  <property name="stage.dir"
+            value="${basedir}/bin/stage"
+            description="Name of the stage directory"/>
+
+  <property name="runtimelib.dir"
+            value="${basedir}/runtime-lib"
+            description="Directory that hosts Jar files required to run project source. (IVY will populate this directory with required jars)" />
+
+  <tstamp/>
+
+  <path id="classpath">
+    <fileset dir="${devlib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${runtimelib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+
+  <!-- Build the project.revision property -->
+  <condition property="distribution.version" value="${project.stage}-${project.version}-${DSTAMP}" else="${project.stage}-${project.version}">
+    <equals arg1="${project.version}" arg2="SNAPSHOT"/>
+  </condition>
+
+  <echo>distribution.version = ${distribution.version}</echo>
+
+  <target name="dist" depends="clean,resolve,jar,dist-plugin">
+  </target>
+  <target name="dist-compile" depends="jar,dist-plugin"/>
+
+  <property name="plugin.artifact.id" value="${plugin.name}"/>
+
+  <!--=======================================================================
+        dist - Creates a distribution of this project's plugin zip
+    ====================================================================-->
+  <target name="assemble" depends="install-antcontrib, dist-plugin"/>
+
+  <target name="dist-plugin" depends="jar" description="Creates a distribution">
+
+    <!-- delete and re-create the plugin dist folder tree -->
+    <mkdir dir="${stage.dir}"/>
+    <mkdir dir="${stage.dir}/${plugin.name}"/>
+
+    <!-- copy the plugin jar to the plugin dist lib folder -->
+    <copy todir="${stage.dir}/${plugin.name}" overwrite="true">
+      <fileset dir="${dist.dir}">
+        <include name="${ivy.artifact.id}-${project.revision}.jar"/>
+      </fileset>
+      <fileset dir="${runtimelib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${devlib.dir}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${stage.dir}/${plugin.name}" overwrite="true">
+      <fileset dir="${basedir}">
+        <include name="readme.txt"/>
+      </fileset>
+    </copy>
+
+    <!-- create the version file -->
+    <echo file="${dist.dir}/VERSION.txt">${distribution.version}</echo>
+    <echo file="${stage.dir}/${plugin.name}/VERSION.txt">${distribution.version}</echo>
+
+  </target>
+
+  <!--=======================================================================
+      publish-pentaho-nojar (override) - Publishes the jar and plugin zip package to the repository
+    ====================================================================-->
+  <target name="publish-nojar"
+          depends="install-antcontrib,ivy.deliver">
+    <ant antfile="../build-res/subfloor.xml" target="publish-nojar"/>
+  </target>
+
+  <!-- Overriding resolve target so we can add resolve-dev -->
+  
+  <target name="resolve" depends="subfloor.resolve" >
+    <mkdir dir="${runtimelib.dir}" />
+    <copy todir="${runtimelib.dir}" overwrite="true">
+    	<fileset dir="${lib.dir}">
+    		<include name="cpf-*.jar" />
+        <include name="jericho-html-3.1.jar" />
+    	</fileset>
+    </copy>
+  </target>
+
+  <target name="clean" depends="subfloor.clean" >
+    <delete dir="${stage.dir}" verbose="true"/>
+    <delete dir="${lib.dir}" verbose="true"/>
+    <delete dir="${testlib.dir}" verbose="true"/>
+    <delete dir="${runtimelib.dir}" verbose="true"/>
+  </target>
+
+</project>

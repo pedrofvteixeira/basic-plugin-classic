@@ -1,0 +1,114 @@
+<project name="Pentaho Basic Plugin" basedir="." default="jar"
+         xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <description>
+    Pentaho Basic Plugin convenience build
+  </description>
+
+
+  <property file="override.properties"
+            description="Properties customized for your development environment belong in this file.  This file will never be checked into the SCM." />
+  <property file="build.properties"
+            description="Properties customized for your particular project belong in this file." />
+
+  <property name="api.project" value="basic-plugin-api" description="Basic Plugin API project"/>
+  <property name="core.project" value="basic-plugin-core" description="Basic Plugin core project"/>
+
+  <property name="all.projects" value="${api.project},${core.project}" description="all projects that make up Basic Plugin"/>
+
+  <!-- just to steal install-antcontrib from subfloor -->
+  <import file="build-res/subfloor-pkg.xml" as="subfloor"/>
+
+  <!-- No project-specific stuff beyond this point! -->
+
+ <!--params: projects, target -->
+  <target name="call" depends="subfloor.install-antcontrib">
+    <for list="${projects}" param="proj">
+      <sequential>
+        <echo level="info">###############################</echo>
+        <echo level="info">   CALL ${target} on @{proj}</echo>
+        <echo level="info">###############################</echo>
+        <ant dir="@{proj}" antfile="build.xml" target="${target}" inheritAll="false"/>
+        <echo level="info">###############################</echo>
+        <echo level="info">FINISHED</echo>        
+        <echo level="info">###############################</echo>
+      </sequential>
+    </for>
+  </target>
+
+  <target name="clean-all">
+    <antcall target="call">
+      <param name="target" value="clean-all"/>
+      <param name="projects" value="${all.projects}"/>
+    </antcall>
+  </target>
+
+  <target name="clean">
+    <delete dir="dist" verbose="true"/>
+    <antcall target="call">
+      <param name="target" value="clean"/>
+      <param name="projects" value="${all.projects}"/>
+    </antcall>
+  </target>
+
+  <target name="resolve" depends="publish-local-api">
+    <antcall target="call">
+      <param name="target" value="resolve"/>
+      <param name="projects" value="${all.projects}"/>
+    </antcall>
+  </target>
+  
+  <target name="test">
+    <antcall target="call">
+      <param name="target" value="test"/>
+      <param name="projects" value="${all.projects}"/>
+    </antcall>  
+  </target>    
+
+  <target name="publish-local-api">
+    <ant dir="${api.project}" antfile="build.xml" target="resolve" inheritAll="false" />
+    <ant dir="${api.project}" antfile="build.xml" target="publish-local" inheritAll="false"/>
+  </target>
+
+  <target name="publish-local-core">
+    <ant dir="${core.project}" antfile="build.xml" target="resolve" inheritAll="false" />
+    <ant dir="${core.project}" antfile="build.xml" target="publish-local" inheritAll="false"/>
+  </target>
+
+  <target name="resolve-projects">
+    <antcall target="call">
+      <param name="target" value="resolve"/>
+      <param name="projects" value="${all.projects}"/>
+    </antcall>
+  </target>
+
+  <target name="publish">
+    <antcall target="call">
+      <param name="target" value="publish"/>
+      <param name="projects" value="${all.projects}"/>
+    </antcall>  
+  </target>
+
+  <target name="dist" depends="publish-local-api"> 
+    <antcall target="call">
+      <param name="target" value="dist"/>
+      <param name="projects" value="${core.project}"/>
+    </antcall>
+    
+    <mkdir dir="dist"/>
+    <copy todir='dist'>
+        <fileset dir='${core.project}/dist'>
+          <include name="**/*.zip" />
+        </fileset>
+    </copy>    
+    
+  </target>
+
+  <target name="publish-local">
+    <antcall target="call">
+      <param name="target" value="publish-local"/>
+      <param name="projects" value="${all.projects}"/>
+    </antcall>
+  </target>
+	
+</project>

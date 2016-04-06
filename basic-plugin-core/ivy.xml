@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+
+  <info organisation="pentaho" module="${ivy.artifact.id}" revision="${project.revision}"/>
+
+  <configurations>
+    <conf name="default"/>
+    <conf name="test" visibility="private"/>
+    <conf name="runtime"/>
+    <conf name="sources"/>
+    <conf name="legacy"/>
+  </configurations>
+
+
+  <publications>
+    <artifact name="${ivy.artifact.id}" type="jar" conf="default" />
+    <artifact name="${ivy.artifact.id}" m:classifier="sources" type="source" ext="jar" conf="sources"/>
+  </publications>
+
+  <dependencies defaultconf="default->default">
+
+    <dependency org="${pentaho.group}" name="basic-plugin-api" rev="${project.revision}" transitive="false" changing="true" conf='runtime,default'/>
+
+    <dependency org="${pentaho.group}" name="pentaho-platform-api" rev="${dependency.pentaho.revision}" transitive="false"  changing="true" />
+    
+  </dependencies>
+
+</ivy-module>

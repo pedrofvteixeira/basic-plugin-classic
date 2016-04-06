@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:pen="http://www.pentaho.com/schema/pentaho-system"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.pentaho.com/schema/pentaho-system http://www.pentaho.com/schema/pentaho-system.xsd"
+       default-lazy-init="true">
+
+  <!-- ========================================= -->
+  <!--    BASE PLUGIN.SPRING.XML DECLARATIONS    -->
+  <!-- ========================================= -->
+
+  <context:annotation-config />
+
+  <!-- (optional) When added as a bean to a Spring context this class will register the ApplicationContext as 
+        a StandalongSpringPentahoObjectFactory with the PentahoSystem --> 
+  <!-- <bean class="org.pentaho.platform.engine.core.system.objfac.spring.ApplicationContextPentahoSystemRegisterer" lazy-init="false"/> -->
+
+  <!-- ========================================= -->
+  <!--   ( USEFUL ) REUSABLE BEAN DECLARATIONS   -->
+  <!-- ========================================= -->
+
+  <bean id="bp.settings" class="pt.webdetails.basic.plugin.BasicPluginSettings">
+    <property name="extension" value="properties" />
+    <property name="mimeType" value="text/plain" />
+    <property name="saySomething" value="Hello World!" />
+  </bean>
+
+  <!-- declared in pentahoObject.spring.xml, referenced via the pen:bean -->
+  <pen:bean id="repository" class="org.pentaho.platform.api.repository2.unified.IUnifiedRepository" />
+
+
+
+</beans>

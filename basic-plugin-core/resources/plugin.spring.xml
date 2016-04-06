@@ -31,6 +31,24 @@
   <!-- declared in pentahoObject.spring.xml, referenced via the pen:bean -->
   <pen:bean id="repository" class="org.pentaho.platform.api.repository2.unified.IUnifiedRepository" />
 
+  <!-- ========================================= -->
+  <!-- Content Generators                        -->
+  <!-- ========================================= -->
+
+  <!-- see plugin.xml for content type actions -->
+
+  <!-- your standard/base CG declaration, similar to declaring it via the content-generator tag in plugin.xml -->
+  <bean id="properties" class="pt.webdetails.basic.plugin.BasicPluginContentGenerator" scope="prototype">
+    <constructor-arg ref="bp.settings" />
+    <constructor-arg ref="repository" />
+  </bean> 
+
+  <!-- a CG declaration with bean-id equal to the perspective set for the 'EDIT' action in plugin.xml -->
+  <bean id="properties.edit" class="pt.webdetails.basic.plugin.BasicPluginContentGenerator" scope="prototype">
+    <constructor-arg ref="bp.settings" />
+    <constructor-arg ref="repository" />
+    <property name="editMode" value="true" />
+  </bean> 
 
 
 </beans>

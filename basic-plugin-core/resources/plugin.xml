@@ -10,5 +10,38 @@
 	<lifecycle-listener class="pt.webdetails.basic.plugin.BasicPluginLifecycleListener" />
 	
 	
+	<!-- ================================ -->
+	<!-- Content Types 					  -->
+	<!-- ================================ -->	
+
+	<content-types>
+
+		<!-- for now we'll use a file extension that we know the platform is aware of, but later on we'll create our own -->
+		<!-- see pentaho-solutions/system/ImportHandlerMimeTypeDefinitions.xml for list of recognized mimeTypes + file extensions -->
+
+        <content-type type="properties" mime-type="text/plain"> <!-- see plugin.spring.xml -->
+        	<title>PROPERTIES</title>
+	      	<operations>
+
+	      		<!-- a couple basic operation ids: RUN, NEWWINDOW, BACKGROUND, EDIT, SCHEDULE_NEW, .. -->
+
+	      		<operation>
+		          	<id>RUN</id> 
+		          	<!-- no perspective set: uses default /generatedContent -->
+		        </operation>
+
+		        <operation>
+					<id>EDIT</id>
+
+					<!-- "perspective" equals "bean-id declared in plugin.spring.xml" 	-->
+					<!-- The following lookup logic is used ( by this order ): 			-->
+					<!-- (1) <file-extension> + <dot> + <perspective>  					-->
+					<!-- (2) <perspective> 												-->
+					<perspective>properties.edit</perspective> 
+		        </operation>
+		    </operations>
+    	</content-type>	
+
+    </content-types>
 
 </plugin>

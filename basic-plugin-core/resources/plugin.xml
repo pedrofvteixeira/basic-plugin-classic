@@ -95,4 +95,16 @@
 	</overlays>
 
 
+	<!-- ================================ -->
+	<!-- Perspectives		 			  -->
+	<!-- ================================ -->
+
+	<perspective id="bp.perspective"
+				 title="${bp.pespective}"
+				 resourcebundle="api/repos/basic-plugin/lang/messages"
+				 content-url="plugin/basic-plugin/api/hello"
+				 required-security-action="org.pentaho.security.administerSecurity">
+	</perspective>
+
+
 </plugin>

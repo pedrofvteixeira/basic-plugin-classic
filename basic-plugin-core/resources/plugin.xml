@@ -65,4 +65,34 @@
     	<file context="mantle">api/repos/basic-plugin/resources/basic-plugin-startup.js</file>
   	</external-resources>
 
+
+	<!-- ================================ -->
+	<!-- Overlays			 			  -->
+	<!-- ================================ -->
+
+	<overlays>
+
+		<!-- A new option under the 'CREATE NEW' button -->
+		<overlay id="launch" resourcebundle="api/repos/basic-plugin/lang/messages">
+			<!-- 'launch': id that represents the 'CREATE NEW' button -->
+			<button id="btn_new_basic_plugin"
+					label="${bp.btn.create.new}"
+					command="Home.openFile('${bp.btn.create.new}', '${bp.bnt.create.new.title}', 'plugin/basic-plugin/api/hello');$('#btnCreateNew').popover('hide');"/>
+		</overlay>
+
+
+		<!-- A new option under the 'Tools' menu -->
+		<overlay id="startup_tools_bp" resourcebundle="api/repos/basic-plugin/lang/messages">
+			<menubar id="toolsmenu">
+				<!-- 'toolsmenu': id of the menu under which we'll be adding our item -->
+				<menuitem id="tools_bp"
+						  label="${bp.tools.menu.item}"
+						  command="mantleXulHandler.openUrl('${bp.tools.menu.item}','${bp.tools.menu.item.title}', 'plugin/basic-plugin/api/hello')">
+				</menuitem>
+			</menubar>
+		</overlay>
+
+	</overlays>
+
+
 </plugin>

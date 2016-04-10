@@ -52,6 +52,34 @@
 		    </operations>
     	</content-type>	
 
+
+		<!-- =================================== -->
+		<!-- Dedicated Content Type				 -->
+		<!-- =================================== -->
+
+		<!-- A new file extension dedicated to this 'basic-plugin' platform plugin: '.bp' -->
+		<!-- For this new file extension we'll set a a mime-type of its own -->
+		<content-type type="bp" mime-type="application/vnd.basic-plugin.text">
+			<title>BP_FILE_EXTENSION</title>
+			<operations>
+
+				<operation>
+					<id>RUN</id>
+					<!-- no perspective set: uses default /generatedContent -->
+				</operation>
+
+				<operation>
+					<id>EDIT</id>
+
+					<!-- "perspective" equals "bean-id declared in plugin.spring.xml"   -->
+					<!-- The following lookup logic is used ( by this order ):      -->
+					<!-- (1) <file-extension> + <dot> + <perspective>           -->
+					<!-- (2) <perspective>                        -->
+					<perspective>bp.edit</perspective>
+				</operation>
+			</operations>
+		</content-type>
+
     </content-types>
 
 	<!-- ================================ -->

@@ -3,8 +3,10 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xmlns:pen="http://www.pentaho.com/schema/pentaho-system"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
                            http://www.pentaho.com/schema/pentaho-system http://www.pentaho.com/schema/pentaho-system.xsd"
        default-lazy-init="true">
 
@@ -50,6 +52,17 @@
     <property name="editMode" value="true" />
   </bean> 
 
+  <bean id="bp" class="pt.webdetails.basic.plugin.BasicPluginContentGenerator" scope="prototype">
+    <constructor-arg ref="bp.settings" />
+    <constructor-arg ref="repository" />
+  </bean>
+
+  <bean id="bp.edit" class="pt.webdetails.basic.plugin.BasicPluginContentGenerator" scope="prototype">
+    <constructor-arg ref="bp.settings" />
+    <constructor-arg ref="repository" />
+    <property name="editMode" value="true" />
+  </bean>
+
   <!-- ========================================= -->
   <!-- REST endpoints                            -->
   <!-- ========================================= -->
@@ -62,6 +75,64 @@
   <bean id="basicPluginRestApi" class="pt.webdetails.basic.plugin.BasicPluginRestApi">
     <constructor-arg ref="bp.settings" />
     <constructor-arg ref="repository" />
+  </bean>
+
+
+  <!-- ========================================= -->
+  <!-- Dedicated Content Type and ImportHandler  -->
+  <!-- ========================================= -->
+
+  <!-- 1) MimeType declaration for the new 'application/vnd.basic-plugin.text' -->
+  <bean id="basicPluginMimeType" class="org.pentaho.platform.core.mimetype.MimeType">
+    <constructor-arg value="application/vnd.basic-plugin.text" />
+    <constructor-arg>
+      <util:list>
+        <!-- adding .bp ( 'B'asic 'P'lugin ) file extension -->
+        <!-- ( nothing more that a plain .txt file that we rename to a .bp extension ) -->
+        <value>bp</value>
+        <!-- add more file extensions here -->
+      </util:list>
+    </constructor-arg>
+    <property name="converter">
+      <pen:bean class="org.pentaho.platform.api.repository2.unified.Converter">
+        <pen:attributes>
+          <pen:attr key="id" value="streamConverter"/> <!-- defined in importExport.xml -->
+        </pen:attributes>
+      </pen:bean>
+    </property>
+  </bean>
+
+
+  <!-- 2) IPlatformImportHandler for the new MimeType 'application/vnd.basic-plugin.text' -->
+  <!-- ( we'll just use the platform's standard importHandler, but we could've also implemented our own IPlatformImportHandler ) -->
+  <bean id="basicPluginImportHandler" class="org.pentaho.platform.plugin.services.importer.RepositoryFileImportFileHandler">
+    <constructor-arg>
+      <util:list value-type="org.pentaho.platform.plugin.services.importer.mimeType.MimeType">
+        <ref bean="basicPluginMimeType" />
+        <!-- add more mimeTypes here -->
+      </util:list>
+    </constructor-arg>
+    <property name="repository" ref="repository" />
+    <property name="defaultAclHandler">
+      <bean class="org.pentaho.platform.repository2.unified.jcr.InheritDefaultAclHandler" /> <!-- we'll use the default acl handler -->
+    </property>
+  </bean>
+
+
+  <!-- 3) A util bean that simply registers all importHandlers / mimeTypes declared here into the Pentaho platform -->
+  <bean class="pt.webdetails.basic.plugin.BasicPluginContentTypeRegister" init-method="start" lazy-init="false">
+    <property name="importHandlers">
+      <util:list value-type="org.pentaho.platform.plugin.services.importer.IPlatformImportHandler">
+        <ref local="basicPluginImportHandler" />
+        <!-- add more importHandlers here -->
+      </util:list>
+    </property>
+    <property name="mimeTypeResolvers">
+      <util:list value-type="org.pentaho.platform.api.mimetype.IMimeType">
+        <ref local="basicPluginMimeType" />
+        <!-- add more mimeTypes here -->
+      </util:list>
+    </property>
   </bean>
 
 </beans>

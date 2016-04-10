@@ -30,6 +30,7 @@
     <dependency org="commons-io" name="commons-io" rev="${dependency.commons.io.revision}"  transitive="false" />
 
     <dependency org="javax.servlet" name="javax.servlet-api" rev="${dependency.javax.servet.revision}" transitive="false"/>
+    <dependency org="javax.ws.rs" name="javax.ws.rs-api" rev="${dependency.javax.ws.rs.api.revision}" transitive="false"/>
     
   </dependencies>
 

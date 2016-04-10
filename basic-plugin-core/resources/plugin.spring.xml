@@ -50,5 +50,18 @@
     <property name="editMode" value="true" />
   </bean> 
 
+  <!-- ========================================= -->
+  <!-- REST endpoints                            -->
+  <!-- ========================================= -->
+
+  <!-- ( mandatory ) JAX-RS beans entry point -->
+  <!-- REST endpoints' base URI is <webapp>/plugin/<plugin-id>/api/ -->
+  <bean id="api" class="org.pentaho.platform.web.servlet.JAXRSPluginServlet"/>
+
+  <!-- REST bean -->
+  <bean id="basicPluginRestApi" class="pt.webdetails.basic.plugin.BasicPluginRestApi">
+    <constructor-arg ref="bp.settings" />
+    <constructor-arg ref="repository" />
+  </bean>
 
 </beans>
